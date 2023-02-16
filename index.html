@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- refrence the index.js -->
+    <script type="module" src="./index.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- signup form -->
+    <h1>Signup</h1>
+    <form id="signup-form" action="#" method="post">
+      <!-- email -->
+      <label for="signup-email">Email</label>
+      <input type="text" id="signup-email" name="signup-email" />
+      <br />
+      <!-- password -->
+      <label for="signup-password">Password</label>
+      <input type="password" id="signup-password" name="signup-password" />
+      <!-- signup button -->
+      <button type="button" id="register" name="register">signup</button>
+    </form>
+    <!-- end of signup form -->
+    <!-- login form -->
+    <h1>Login</h1>
+    <form id="login-form" action="#" method="post">
+      <!-- email -->
+      <label for="login-email">Email</label>
+      <input type="text" id="login-email" name="login-email" />
+      <br />
+      <!-- password -->
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="login-password" />
+      <!-- login button -->
+      <button type="button" id="login" name="login">login</button>
+      <button type="button" id="logout" name="logout">logout</button>
+    </form>
+    <!-- firebase -->
+    <!-- <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAb7HACiJd16gpmh-4uZz0m1bd6qmNRbjE",
+        authDomain: "public-transportation-gu-bdeed.firebaseapp.com",
+        projectId: "public-transportation-gu-bdeed",
+        storageBucket: "public-transportation-gu-bdeed.appspot.com",
+        messagingSenderId: "704436761029",
+        appId: "1:704436761029:web:1a09532a254ea028a15bac",
+        measurementId: "G-5HVLYKW6QB",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth();
+    </script> -->
+    <!-- scripts -->
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/index.js"></script>
+  </body>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      sendEmailVerification,
+    } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAb7HACiJd16gpmh-4uZz0m1bd6qmNRbjE",
+      authDomain: "public-transportation-gu-bdeed.firebaseapp.com",
+      projectId: "public-transportation-gu-bdeed",
+      storageBucket: "public-transportation-gu-bdeed.appspot.com",
+      messagingSenderId: "704436761029",
+      appId: "1:704436761029:web:1a09532a254ea028a15bac",
+      measurementId: "G-5HVLYKW6QB",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    // console.log(app);
+
+    // registeration
+    document.querySelector("#register").addEventListener("click", function (e) {
+      var email = document.querySelector("#signup-email").value;
+      var password = document.querySelector("#signup-password").value;
+      // for new registration
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user;
+          // verification
+          sendEmailVerification(user).then(() => {
+            console.log("verification is sent");
+            alert("verification is sent");
+          });
+          console.log(user);
+          alert("Registration successfully");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          alert(error);
+        });
+    });
+    // login
+    document.querySelector("#login").addEventListener("click", function () {
+      var email = document.querySelector("#login-email").value;
+      var password = document.querySelector("#login-password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredentials) => {
+          const user = userCredentials.user;
+          console.log(user);
+          alert(user.email + "login successfully");
+          document.querySelector("#logout").style.display = "block";
+        })
+        .cath(() => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorMessage);
+          alert(errorMessage);
+        });
+    });
+    // logout
+    document.querySelector("#logout").addEventListener("click", function () {
+      signOut(auth)
+        .then(() => {
+          console.log("sign out successfully");
+          alert("sign out successfully");
+          document.querySelector("#logout").style.display = "none";
+        })
+        .catch((error) => {
+          console.log("an error happened");
+        });
+    });
+  </script>
+</html>
